@@ -21,39 +21,45 @@
     </div>
     <table>
       <tr>
-        <th>Site</th><th>Usuario</th><th>Senha</th><th></th>
+        <th>Site</th><th>Usuario</th><th>Senha</th><th>-</th>
       </tr>
-      <tr v-for="item in lista" :key="item.site">
-        <td>{{ item.site }}</td>
-        <td>{{ item.usuario }}</td>
-        <Oculto :valor="item.senha"/>
-      </tr>
+      <LinhaTabela :item="item"
+                   v-for="item in lista"
+                   :key="item.id"
+                   :remover="remover"
+      />
     </table>
   </div>
 </template>
 
 <script>
-  import Oculto from "@/components/Oculto"
+  import LinhaTabela from "@/components/LinhaTabela"
 
   export default {
 
     name: "AppSenhas",
-    components: {Oculto},
+    components: {LinhaTabela},
     data() {
       return {
         novo: { site: '',  usuario: '', senha:'' },
-        lista: []
-      }
-    },
-    filters: {
-      ocultar(valor){
-        return '***'
+        lista: [],
+        count: 0
       }
     },
     methods:{
       salvar() {
+        if(!this.validar()) {
+          return
+        }
         this.lista.push(this.novo)
-        this.novo = { site: '',  usuario: '', senha:'' }
+        this.novo = { id: this.count++, site: '',  usuario: '', senha:'' }
+      },
+      validar(){
+        return this.novo.site && this.novo.usuario && this.novo.senha
+      },
+      remover(item){
+        let posicao = this.lista.indexOf(item)
+        this.$delete(this.lista, posicao)
       },
       gerarSenha() {
         const MAPA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&'

@@ -1,5 +1,11 @@
 <template>
-  <td>{{ exibido }} <i @click="alternar">O</i></td>
+  <td>
+    <span v-if="exibindo">
+      {{ valor }}
+    </span>
+    <span v-else>***</span>
+    <i @click="alternar">O</i>
+  </td>
 </template>
 <script>
   export default {
